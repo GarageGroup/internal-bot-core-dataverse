@@ -1,0 +1,41 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<savedqueries xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <savedquery>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>0</CanBeDeleted>
+    <isquickfindquery>0</isquickfindquery>
+    <isprivate>0</isprivate>
+    <isdefault>1</isdefault>
+    <savedqueryid>{584b31f3-b998-4ddf-b1b3-9bc15e1acd7f}</savedqueryid>
+    <layoutxml>
+      <grid name="resultset" jump="gg_name" select="1" icon="1" preview="1">
+        <row name="result" id="gg_bot_user_subscriptionid">
+          <cell name="gg_name" width="300" />
+          <cell name="createdon" width="125" />
+          <cell name="gg_notification_type_id" width="142" />
+          <cell name="gg_notification_preferences" width="175" />
+        </row>
+      </grid>
+    </layoutxml>
+    <querytype>0</querytype>
+    <fetchxml>
+      <fetch version="1.0" mapping="logical">
+        <entity name="gg_bot_user_subscription">
+          <attribute name="gg_bot_user_subscriptionid" />
+          <attribute name="gg_name" />
+          <attribute name="createdon" />
+          <order attribute="gg_name" descending="false" />
+          <filter type="and">
+            <condition attribute="statecode" operator="eq" value="0" />
+          </filter>
+          <attribute name="gg_notification_type_id" />
+          <attribute name="gg_notification_preferences" />
+        </entity>
+      </fetch>
+    </fetchxml>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <LocalizedNames>
+      <LocalizedName description="Active Bot User Subscriptions" languagecode="1033" />
+    </LocalizedNames>
+  </savedquery>
+</savedqueries>

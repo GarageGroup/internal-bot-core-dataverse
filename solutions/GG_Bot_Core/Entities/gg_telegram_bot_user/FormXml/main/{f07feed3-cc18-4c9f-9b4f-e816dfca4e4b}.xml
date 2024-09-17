@@ -1,0 +1,159 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{f07feed3-cc18-4c9f-9b4f-e816dfca4e4b}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form headerdensity="HighWithControls">
+      <tabs>
+        <tab verticallayout="true" id="{53dc29bc-7048-4acc-837a-b2ee3dc24754}" IsUserDefined="1">
+          <labels>
+            <label description="General" languagecode="1033" />
+            <label description="Общие сведения" languagecode="1049" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="false" showbar="false" IsUserDefined="0" id="{41875263-8c5a-4612-8058-8d697114f821}">
+                  <labels>
+                    <label description="General" languagecode="1033" />
+                    <label description="Общие сведения" languagecode="1049" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{dbd74baf-286c-43d0-9e18-b023ec2b3ec4}">
+                        <labels>
+                          <label description="Name" languagecode="1033" />
+                        </labels>
+                        <control id="gg_name" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="gg_name" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{40a6e923-dd94-4b41-8029-efe844b285e7}" visible="false">
+                        <labels>
+                          <label description="Owner" languagecode="1033" />
+                          <label description="Ответственный" languagecode="1049" />
+                        </labels>
+                        <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{6603e5fe-0407-4bf8-a7bb-7dc1cf90dc3d}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Bot Id" languagecode="1033" />
+                          <label description="Bot Id" languagecode="1049" />
+                        </labels>
+                        <control id="gg_bot_id" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="gg_bot_id" disabled="true" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{5a521b32-f3d0-46fe-9f4b-478024c288fe}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Chat Id" languagecode="1033" />
+                          <label description="Chat Id" languagecode="1049" />
+                        </labels>
+                        <control id="gg_chat_id" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="gg_chat_id" disabled="true" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{7c7c89a2-c7f1-4a1b-be34-eefd1c9bee85}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="System User" languagecode="1033" />
+                          <label description="System User" languagecode="1049" />
+                        </labels>
+                        <control id="gg_systemuser_id" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="gg_systemuser_id" disabled="true" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{cdaba536-8a60-4aad-9940-0edf4562de78}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Language Code" languagecode="1033" />
+                          <label description="Language Code" languagecode="1049" />
+                        </labels>
+                        <control id="gg_language_code" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="gg_language_code" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{d07f3014-1665-4f3c-ad53-67e99f96320c}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Time Zone" languagecode="1033" />
+                          <label description="Time Zone" languagecode="1049" />
+                        </labels>
+                        <control id="gg_time_zone" classid="{4273EDBD-AC1D-40D3-9FB2-095C621B552D}" datafieldname="gg_time_zone" disabled="false" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{018846b4-50be-4494-99b3-bed0d0756bf0}" locklevel="0" colspan="1" rowspan="1">
+                        <labels>
+                          <label description="Is User Signed Out" languagecode="1033" />
+                          <label description="Is User Signed Out" languagecode="1049" />
+                        </labels>
+                        <control id="gg_is_user_signed_out" classid="{67FAC785-CD58-4F9F-ABB3-4B7DDC6ED5ED}" datafieldname="gg_is_user_signed_out" disabled="false" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+      <header id="{ad52bfdd-9811-439d-9008-473b0bf22eeb}" celllabelposition="Top" columns="111" labelwidth="115" celllabelalignment="Left">
+        <rows>
+          <row>
+            <cell id="{829c5639-99f6-458c-9118-111b934ba081}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{70a56294-c352-4ddc-b308-c8d593dedbfa}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{ddd7c88f-b44d-47b4-9f65-786799ec8fc1}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+          </row>
+        </rows>
+      </header>
+      <footer id="{e9a5b592-48f7-4a79-870e-62a2c641b2de}" celllabelposition="Top" columns="111" labelwidth="115" celllabelalignment="Left">
+        <rows>
+          <row>
+            <cell id="{45bd13ff-1e03-49ba-a8da-63b5519148fa}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{00bdacb0-1831-4a41-ad8f-85d710fc950a}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+            <cell id="{cc472350-f542-49e8-81c1-7b6403b053a8}" showlabel="false">
+              <labels>
+                <label description="" languagecode="1033" />
+              </labels>
+            </cell>
+          </row>
+        </rows>
+      </footer>
+      <DisplayConditions Order="0" FallbackForm="true">
+        <Everyone />
+      </DisplayConditions>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Information" languagecode="1033" />
+      <LocalizedName description="Information" languagecode="1049" />
+    </LocalizedNames>
+    <Descriptions>
+      <Description description="A form for this entity." languagecode="1033" />
+      <Description description="A form for this entity." languagecode="1049" />
+    </Descriptions>
+  </systemform>
+</forms>

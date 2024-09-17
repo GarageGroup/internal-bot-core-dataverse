@@ -1,0 +1,105 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml version="9.2.24082.188" SolutionPackageVersion="9.2" languagecode="1033" generatedBy="CrmLive" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.24082.188" OrganizationSchemaType="Full" OrganizationType="CustomerTest" TenantId="69879a40-68bb-4b30-941b-eb9692ddd9b4" CRMServerServiceabilityVersion="9.2.24083.00198">
+  <SolutionManifest>
+    <UniqueName>GG_Bot_Core</UniqueName>
+    <LocalizedNames>
+      <LocalizedName description="GG_Bot_Core" languagecode="1033" />
+      <LocalizedName description="GG_Bot_Core" languagecode="1049" />
+    </LocalizedNames>
+    <Descriptions />
+    <Version>1.0.0.4</Version>
+    <Managed>2</Managed>
+    <Publisher>
+      <UniqueName>ggroupp</UniqueName>
+      <LocalizedNames>
+        <LocalizedName description="Ggroupp" languagecode="1033" />
+      </LocalizedNames>
+      <Descriptions />
+      <EMailAddress>power@ggroupp.ru</EMailAddress>
+      <SupportingWebsiteUrl>https://ggroupp.ru/</SupportingWebsiteUrl>
+      <CustomizationPrefix>gg</CustomizationPrefix>
+      <CustomizationOptionValuePrefix>10000</CustomizationOptionValuePrefix>
+      <Addresses>
+        <Address>
+          <AddressNumber>1</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City>Moscow</City>
+          <County xsi:nil="true"></County>
+          <Country>Russia</Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+        <Address>
+          <AddressNumber>2</AddressNumber>
+          <AddressTypeCode>1</AddressTypeCode>
+          <City xsi:nil="true"></City>
+          <County xsi:nil="true"></County>
+          <Country xsi:nil="true"></Country>
+          <Fax xsi:nil="true"></Fax>
+          <FreightTermsCode xsi:nil="true"></FreightTermsCode>
+          <ImportSequenceNumber xsi:nil="true"></ImportSequenceNumber>
+          <Latitude xsi:nil="true"></Latitude>
+          <Line1 xsi:nil="true"></Line1>
+          <Line2 xsi:nil="true"></Line2>
+          <Line3 xsi:nil="true"></Line3>
+          <Longitude xsi:nil="true"></Longitude>
+          <Name xsi:nil="true"></Name>
+          <PostalCode xsi:nil="true"></PostalCode>
+          <PostOfficeBox xsi:nil="true"></PostOfficeBox>
+          <PrimaryContactName xsi:nil="true"></PrimaryContactName>
+          <ShippingMethodCode>1</ShippingMethodCode>
+          <StateOrProvince xsi:nil="true"></StateOrProvince>
+          <Telephone1 xsi:nil="true"></Telephone1>
+          <Telephone2 xsi:nil="true"></Telephone2>
+          <Telephone3 xsi:nil="true"></Telephone3>
+          <TimeZoneRuleVersionNumber xsi:nil="true"></TimeZoneRuleVersionNumber>
+          <UPSZone xsi:nil="true"></UPSZone>
+          <UTCOffset xsi:nil="true"></UTCOffset>
+          <UTCConversionTimeZoneCode xsi:nil="true"></UTCConversionTimeZoneCode>
+        </Address>
+      </Addresses>
+    </Publisher>
+    <RootComponents>
+      <RootComponent type="1" schemaName="gg_bot_notification_type" behavior="0" />
+      <RootComponent type="1" schemaName="gg_bot_user_subscription" behavior="0" />
+      <RootComponent type="1" schemaName="gg_subscription_message_notification" behavior="0" />
+      <RootComponent type="1" schemaName="gg_telegram_bot" behavior="0" />
+      <RootComponent type="1" schemaName="gg_telegram_bot_user" behavior="0" />
+      <RootComponent type="1" schemaName="systemuser" behavior="1" />
+      <RootComponent type="29" id="{1ac44c04-6a1e-ef11-840a-6045bd92dcb1}" behavior="0" />
+      <RootComponent type="29" id="{285a2ce7-1470-ef11-a670-000d3a25cefd}" behavior="0" />
+      <RootComponent type="29" id="{7ec95319-4524-ef11-840a-0022487fb7f7}" behavior="0" />
+      <RootComponent type="29" id="{c8c3cfd5-170d-ef11-9f89-6045bd92d2ff}" behavior="0" />
+      <RootComponent type="9" schemaName="gg_botlanguage" behavior="0" />
+    </RootComponents>
+    <MissingDependencies>
+      <MissingDependency>
+        <Required type="1" schemaName="gg_timesheetactivity" displayName="Списание Времени" solution="Active" />
+        <Dependent type="29" displayName="Bot timesheet notification Weekends" id="{1ac44c04-6a1e-ef11-840a-6045bd92dcb1}" />
+      </MissingDependency>
+      <MissingDependency>
+        <Required type="1" schemaName="gg_timesheetactivity" displayName="Списание Времени" solution="Active" />
+        <Dependent type="29" displayName="Bot timesheet notification Daily" id="{c8c3cfd5-170d-ef11-9f89-6045bd92d2ff}" />
+      </MissingDependency>
+    </MissingDependencies>
+  </SolutionManifest>
+</ImportExportXml>

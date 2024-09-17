@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<forms xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <systemform>
+    <formid>{de380bdb-929d-4f4e-acc9-afdb7357d84f}</formid>
+    <IntroducedVersion>1.0</IntroducedVersion>
+    <FormPresentation>1</FormPresentation>
+    <FormActivationState>1</FormActivationState>
+    <form>
+      <tabs>
+        <tab verticallayout="true" id="{42d4428e-b61f-43d7-87db-809a6389378d}" IsUserDefined="1">
+          <labels>
+            <label description="" languagecode="1033" />
+          </labels>
+          <columns>
+            <column width="100%">
+              <sections>
+                <section showlabel="false" showbar="false" IsUserDefined="0" id="{3eb0f733-2d1a-4eaa-85ea-592954a9e363}">
+                  <labels>
+                    <label description="GENERAL" languagecode="1033" />
+                    <label description="ОБЩИЕ" languagecode="1049" />
+                  </labels>
+                  <rows>
+                    <row>
+                      <cell id="{0da181b8-d1de-460f-b0a5-69e2b68ad9b0}">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
+                        <control id="gg_name" classid="{4273EDBD-AC1D-40d3-9FB2-095C621B552D}" datafieldname="gg_name" />
+                      </cell>
+                    </row>
+                    <row>
+                      <cell id="{209e8e91-1514-4f48-b9a5-978e6f6df0a4}">
+                        <labels>
+                          <label description="" languagecode="1033" />
+                        </labels>
+                        <control id="ownerid" classid="{270BD3DB-D9AF-4782-9025-509E298DEC0A}" datafieldname="ownerid" />
+                      </cell>
+                    </row>
+                  </rows>
+                </section>
+              </sections>
+            </column>
+          </columns>
+        </tab>
+      </tabs>
+    </form>
+    <IsCustomizable>1</IsCustomizable>
+    <CanBeDeleted>1</CanBeDeleted>
+    <LocalizedNames>
+      <LocalizedName description="Information" languagecode="1033" />
+      <LocalizedName description="Information" languagecode="1049" />
+    </LocalizedNames>
+  </systemform>
+</forms>

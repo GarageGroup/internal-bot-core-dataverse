@@ -1,0 +1,210 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "gg_sharedcommondataserviceforapps_2439c"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "d84d1def-739d-4349-952d-9c7152002216"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 4,
+              "subscriptionRequest/entityname": "gg_bot_user_subscription",
+              "subscriptionRequest/scope": 4,
+              "subscriptionRequest/filteringattributes": "gg_is_disabled",
+              "subscriptionRequest/runas": 3
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "conditions": [
+            {
+              "expression": "@Or(equals(triggerBody()?['gg_is_disabled'],false),equals(triggerBody()?['gg_is_disabled'], true))"
+            }
+          ]
+        }
+      },
+      "actions": {
+        "Subscription_or_unsubscription": {
+          "actions": {
+            "Subscribe_text": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "5b08cc32-6448-406b-b465-68ea9ea24168"
+              },
+              "type": "Compose",
+              "inputs": "@first(outputs('Get_subs_message_notifications')?['body/value'])?['gg_subscribe_text']"
+            },
+            "HTTP_sub": {
+              "runAfter": {
+                "Subscribe_text": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "a66248d5-eeba-49c9-87d2-bc61368fe7a1"
+              },
+              "type": "Http",
+              "inputs": {
+                "method": "POST",
+                "uri": "@{first(outputs('get_tg_bot')?['body/value'])?['gg_bot_message_url']}",
+                "body": {
+                  "chat_id": "@{outputs('Get_user_subs')?['body/gg_bot_user_id/gg_chat_id']}",
+                  "text": "@{first(outputs('Get_subs_message_notifications')?['body/value'])?['gg_subscribe_text']}",
+                  "parse_mode": "HTML"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Get_subs_message_notifications": [
+              "Succeeded"
+            ]
+          },
+          "else": {
+            "actions": {
+              "Unsubscribe_text": {
+                "runAfter": {},
+                "metadata": {
+                  "operationMetadataId": "6ed38932-2756-4884-b97a-91f0e7c7dfc2"
+                },
+                "type": "Compose",
+                "inputs": "@first(outputs('Get_subs_message_notifications')?['body/value'])?['gg_unsubscribe_text']"
+              },
+              "HTTP_unsub": {
+                "runAfter": {
+                  "Unsubscribe_text": [
+                    "Succeeded"
+                  ]
+                },
+                "metadata": {
+                  "operationMetadataId": "a66248d5-eeba-49c9-87d2-bc61368fe7a1"
+                },
+                "type": "Http",
+                "inputs": {
+                  "method": "POST",
+                  "uri": "@{first(outputs('get_tg_bot')?['body/value'])?['gg_bot_message_url']}",
+                  "body": {
+                    "chat_id": "@{outputs('Get_user_subs')?['body/gg_bot_user_id/gg_chat_id']}",
+                    "text": "@{first(outputs('Get_subs_message_notifications')?['body/value'])?['gg_unsubscribe_text']}",
+                    "parse_mode": "HTML"
+                  }
+                }
+              }
+            }
+          },
+          "expression": {
+            "equals": [
+              "@outputs('Get_user_subs')?['body/gg_is_disabled']",
+              "@false"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "0c90351b-2271-43fe-9659-9d660d31473b"
+          },
+          "type": "If"
+        },
+        "Get_user_subs": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "e8d0593b-8560-452b-9f4e-fee67d6dc1ce"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "gg_bot_user_subscriptions",
+              "recordId": "@triggerOutputs()?['body/gg_bot_user_subscriptionid']",
+              "$expand": "gg_bot_user_id($select=gg_chat_id,gg_language_code,_gg_systemuser_id_value),gg_notification_type_id($select=_gg_telegrambot_id_value)"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "get_tg_bot": {
+          "runAfter": {
+            "Get_user_subs": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "157d98c3-a2d9-4488-abeb-d3fce3a5f81e"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "gg_telegram_bots",
+              "$select": "gg_telegram_botid,gg_bot_message_url",
+              "$filter": "gg_telegram_botid eq @{outputs('Get_user_subs')?['body/gg_notification_type_id/_gg_telegrambot_id_value']}",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_subs_message_notifications": {
+          "runAfter": {
+            "get_tg_bot": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "8619b242-bbb5-4c96-bba4-31547d8c8af9"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "gg_subscription_message_notifications",
+              "$select": "gg_language_code,gg_unsubscribe_text,gg_subscribe_text,_gg_notification_type_id_value,gg_notification_type_id",
+              "$filter": "_gg_notification_type_id_value eq @{outputs('Get_user_subs')?['body/_gg_notification_type_id_value']} and gg_language_code eq '@{outputs('Get_user_subs')?['body/gg_bot_user_id/gg_language_code']}'",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

@@ -1,0 +1,27 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ImportExportXml xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" OrganizationVersion="9.2.24082.188" OrganizationSchemaType="Full" OrganizationType="CustomerTest" TenantId="69879a40-68bb-4b30-941b-eb9692ddd9b4" CRMServerServiceabilityVersion="9.2.24083.00198">
+  <Entities />
+  <Roles />
+  <Workflows />
+  <FieldSecurityProfiles />
+  <Templates />
+  <EntityMaps />
+  <EntityRelationships />
+  <OrganizationSettings />
+  <optionsets />
+  <CustomControls />
+  <EntityDataProviders />
+  <connectionreferences>
+    <connectionreference connectionreferencelogicalname="gg_sharedcommondataserviceforapps_2439c">
+      <connectionreferencedisplayname>Microsoft Dataverse GG_Bot_Core</connectionreferencedisplayname>
+      <connectorid>/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps</connectorid>
+      <iscustomizable>1</iscustomizable>
+      <statecode>0</statecode>
+      <statuscode>1</statuscode>
+    </connectionreference>
+  </connectionreferences>
+  <Languages>
+    <Language>1033</Language>
+    <Language>1049</Language>
+  </Languages>
+</ImportExportXml>

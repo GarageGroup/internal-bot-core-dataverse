@@ -1,0 +1,165 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps_1": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "gg_sharedcommondataserviceforapps_2439c"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "1.0.0.0",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "When_a_row_is_added,_modified_or_deleted": {
+          "metadata": {
+            "operationMetadataId": "df86507e-2d5c-4c3e-8ea9-46f4ef75146b"
+          },
+          "type": "OpenApiConnectionWebhook",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "SubscribeWebhookTrigger",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "subscriptionRequest/message": 1,
+              "subscriptionRequest/entityname": "gg_telegram_bot_user",
+              "subscriptionRequest/scope": 4
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      },
+      "actions": {
+        "Get_notification_types": {
+          "runAfter": {
+            "Get_TG_bot": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "bf17bcb0-b3f4-479d-a7a4-848e8436cc17"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "gg_bot_notification_types",
+              "$select": "gg_default_preferences,gg_autosubscribe_is,gg_botid,gg_name,gg_bot_notification_typeid",
+              "$filter": "gg_autosubscribe_is eq true and gg_botid eq '@{first(outputs('Get_TG_bot')?['body/value'])['gg_name']}'"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Apply_to_each_2": {
+          "foreach": "@outputs('Get_notification_types')?['body/value']",
+          "actions": {
+            "Add_a_new_subscription": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "da2ccbe6-db00-43e8-a738-61e7d05aa855"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps_1",
+                  "operationId": "CreateRecord",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "gg_bot_user_subscriptions",
+                  "item/gg_notification_type_id@odata.bind": "gg_bot_notification_types(@{items('Apply_to_each_2')?['gg_bot_notification_typeid']})",
+                  "item/gg_bot_user_id@odata.bind": "gg_telegram_bot_users(@{triggerOutputs()?['body/gg_telegram_bot_userid']})",
+                  "item/gg_is_disabled": false,
+                  "item/gg_name": "@{outputs('Get_system_user')?['body/fullname']} - @{items('Apply_to_each_2')?['gg_name']}",
+                  "item/gg_notification_preferences": "@items('Apply_to_each_2')?['gg_default_preferences']"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "Get_notification_types": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3cbc83d8-6a63-427e-ad8a-f0cd88052a2d"
+          },
+          "type": "Foreach",
+          "runtimeConfiguration": {
+            "concurrency": {
+              "repetitions": 50
+            }
+          }
+        },
+        "Get_TG_bot": {
+          "runAfter": {
+            "Get_system_user": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "86f46bcc-2d40-44fb-a787-fdad945cbfd4"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "gg_telegram_bots",
+              "$select": "gg_name",
+              "$filter": "gg_bot_id eq '@{triggerOutputs()?['body/gg_bot_id']}'",
+              "$top": 1
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        },
+        "Get_system_user": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "e0083125-d9e1-47ec-bf54-6a6ea2b3a302"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps_1",
+              "operationId": "GetItem",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "systemusers",
+              "recordId": "@triggerOutputs()?['body/_gg_systemuser_id_value']",
+              "$select": "fullname"
+            },
+            "authentication": "@parameters('$authentication')"
+          }
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}
