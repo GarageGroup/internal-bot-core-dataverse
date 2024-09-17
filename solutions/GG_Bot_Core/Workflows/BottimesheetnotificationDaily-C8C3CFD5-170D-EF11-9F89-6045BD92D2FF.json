@@ -1,0 +1,472 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "runtimeSource": "embedded",
+        "connection": {
+          "connectionReferenceLogicalName": "gg_sharedcommondataserviceforapps_2439c"
+        },
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        }
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "undefined",
+      "parameters": {
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        },
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "timeZone": "Russian Standard Time",
+            "startTime": "2024-04-28T08:00:00Z",
+            "schedule": {
+              "hours": [
+                "20",
+                "18",
+                "19",
+                "21"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "04ce2264-5275-42c9-baf4-75876a77bb9e"
+          },
+          "type": "Recurrence"
+        }
+      },
+      "actions": {
+        "Iterate_through_each_subscription": {
+          "foreach": "@outputs('List_rows_from_Bot_user_subscription')?['body/value']",
+          "actions": {
+            "Check_how_many_hours_signed_off_for_today": {
+              "actions": {
+                "Condition": {
+                  "actions": {
+                    "HTTP": {
+                      "runAfter": {},
+                      "metadata": {
+                        "operationMetadataId": "57e09107-6b53-4b12-a7ba-6722f24d2659"
+                      },
+                      "type": "Http",
+                      "inputs": {
+                        "method": "POST",
+                        "uri": "@{first(outputs('get_tg_bot')?['body/value'])?['gg_bot_message_url']}",
+                        "body": {
+                          "chat_id": "@{outputs('Chat_id')}",
+                          "text": "Hello! Don't forget to log time for today!\n\r--------------------------------------------------\n\r/newtimesheet - Create timesheet",
+                          "parse_mode": "HTML"
+                        }
+                      }
+                    }
+                  },
+                  "runAfter": {},
+                  "else": {
+                    "actions": {
+                      "HTTP_2": {
+                        "runAfter": {},
+                        "metadata": {
+                          "operationMetadataId": "57e09107-6b53-4b12-a7ba-6722f24d2659"
+                        },
+                        "type": "Http",
+                        "inputs": {
+                          "method": "POST",
+                          "uri": "@{first(outputs('get_tg_bot')?['body/value'])?['gg_bot_message_url']}",
+                          "body": {
+                            "chat_id": "@{outputs('Chat_id')}",
+                            "text": "Привет! Не забудь списать время за сегодня!\n\r--------------------------------------------------\n\r/newtimesheet - Списать время",
+                            "parse_mode": "HTML"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "expression": {
+                    "equals": [
+                      "@items('Iterate_through_each_subscription')?['gg_bot_user_id/gg_language_code']",
+                      "@string('en')"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "917161e8-2cd5-48f3-a087-94cefa471e9a"
+                  },
+                  "type": "If"
+                }
+              },
+              "runAfter": {
+                "Compose_2": [
+                  "Succeeded"
+                ]
+              },
+              "expression": {
+                "and": [
+                  {
+                    "less": [
+                      "@variables('Work hours')",
+                      "@if(empty(body('Parse_JSON')?['workedHours']),8,float(body('Parse_JSON')?['workedHours']))"
+                    ]
+                  },
+                  {
+                    "contains": [
+                      "@outputs('Preferred_run_time_plus_second_minus_second')",
+                      "@outputs('Flow_start_time')"
+                    ]
+                  }
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e7709600-053d-4249-b943-7cb7b8841bbf"
+              },
+              "type": "If"
+            },
+            "Calc_work_hours": {
+              "foreach": "@outputs('Timesheet_entries_for_today')?['body/value']",
+              "actions": {
+                "Increment_variable": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "2f75f9b9-269a-45fd-8cb7-b0a94c935e3c"
+                  },
+                  "type": "IncrementVariable",
+                  "inputs": {
+                    "name": "Work hours",
+                    "value": "@items('Calc_work_hours')?['gg_duration']"
+                  }
+                }
+              },
+              "runAfter": {
+                "Timesheet_entries_for_today": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e854bc5d-98db-4fc8-96dd-5bdec2fce31f"
+              },
+              "type": "Foreach"
+            },
+            "Timesheet_entries_for_today": {
+              "runAfter": {
+                "get_tg_bot": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3c76de77-ef5c-4e78-97d4-9ccd915fbeb8"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "gg_timesheetactivities",
+                  "$select": "ownerid, _ownerid_value, gg_date, gg_duration",
+                  "$filter": "_ownerid_value eq @{items('Iterate_through_each_subscription')?['gg_bot_user_id/_gg_systemuser_id_value']} and gg_date eq @{variables('Today')}"
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            },
+            "Parse_JSON": {
+              "runAfter": {
+                "Preferences": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "bbbfabe8-565f-42c3-a36c-64e1cf7ccbb5"
+              },
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@json(items('Iterate_through_each_subscription')?['gg_notification_preferences'])",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "workedHours": {
+                      "type": "string"
+                    },
+                    "flowRunTime": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            },
+            "Preferences": {
+              "runAfter": {
+                "Chat_id": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f6f18182-07f5-4b04-9d73-58f9e7653c28"
+              },
+              "type": "Compose",
+              "inputs": "@json(items('Iterate_through_each_subscription')?['gg_notification_preferences'])"
+            },
+            "Chat_id": {
+              "runAfter": {},
+              "metadata": {
+                "operationMetadataId": "3b9f0f82-b668-404a-bc13-cdeb43bca3be"
+              },
+              "type": "Compose",
+              "inputs": "@items('Iterate_through_each_subscription')?['gg_bot_user_id/gg_chat_id']"
+            },
+            "Compose_2": {
+              "runAfter": {
+                "Calc_work_hours": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "6ab3e253-584f-4283-a7a9-c7b2c3381697"
+              },
+              "type": "Compose",
+              "inputs": "@if(empty(body('Parse_JSON')?['workedHours']),8,float(body('Parse_JSON')?['workedHours']))"
+            },
+            "Set_preferred_flow_run_time": {
+              "runAfter": {
+                "Parse_JSON": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "77a5bc4d-db9c-4b27-8e9a-f45360bbaf35"
+              },
+              "type": "SetVariable",
+              "inputs": {
+                "name": "Preferred flowrun time",
+                "value": "@{if(empty(body('Parse_JSON')?['flowRunTime']),'19:00',body('Parse_JSON')?['flowRunTime'])}"
+              },
+              "description": "Set it to 19:00 if json is empty"
+            },
+            "Preferred_run_time_plus_second_minus_second": {
+              "runAfter": {
+                "Set_preferred_flow_run_time": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "aa096a0f-59fe-4db4-a3d4-06f112492cd0"
+              },
+              "type": "Compose",
+              "inputs": "@concat(\r\n\r\nformatDateTime(addMinutes(variables('Preferred flowrun time'),-1),'HH:mm'),\r\n';',\r\nformatDateTime(addMinutes(variables('Preferred flowrun time'),1),'HH:mm'),\r\n';',\r\nvariables('Preferred flowrun time')\r\n\r\n)"
+            },
+            "Compose": {
+              "runAfter": {
+                "Preferred_run_time_plus_second_minus_second": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "40c6c0d4-34ce-4a09-abbd-6d90c2ac243a"
+              },
+              "type": "Compose",
+              "inputs": "@items('Iterate_through_each_subscription')?['gg_bot_user_id/_gg_systemuser_id_value']"
+            },
+            "get_tg_bot": {
+              "runAfter": {
+                "Compose": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "157d98c3-a2d9-4488-abeb-d3fce3a5f81e"
+              },
+              "type": "OpenApiConnection",
+              "inputs": {
+                "host": {
+                  "connectionName": "shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+                },
+                "parameters": {
+                  "entityName": "gg_telegram_bots",
+                  "$select": "gg_telegram_botid,gg_bot_message_url",
+                  "$filter": "gg_telegram_botid eq @{items('Iterate_through_each_subscription')?['gg_notification_type_id/_gg_telegrambot_id_value']}",
+                  "$top": 1
+                },
+                "authentication": "@parameters('$authentication')"
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows_from_Bot_user_subscription": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6b5851bf-aaa7-430a-9ea4-183de79c28d7"
+          },
+          "type": "Foreach"
+        },
+        "Work_hours": {
+          "runAfter": {
+            "Check_for_statuscode": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99a73f32-0b3f-4184-9ca1-f4258e0b47de"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Work hours",
+                "type": "float"
+              }
+            ]
+          }
+        },
+        "Today": {
+          "runAfter": {
+            "Flow_start_time": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7d884299-0bd1-41f9-8d31-616f43b42d51"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Today",
+                "type": "string",
+                "value": "@{formatDateTime(utcNow(),'yyyy-MM-dd')}"
+              }
+            ]
+          }
+        },
+        "Check_if_its_a_weekday": {
+          "runAfter": {
+            "Today": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "b6e3f6b8-df06-4cf0-94cb-7132b3de7c13"
+          },
+          "type": "Http",
+          "inputs": {
+            "method": "GET",
+            "uri": "https://isdayoff.ru/@{variables('Today')}"
+          }
+        },
+        "Check_for_statuscode": {
+          "actions": {
+            "Stop_flow_if_its_non_working_day": {
+              "actions": {
+                "Terminate": {
+                  "runAfter": {},
+                  "metadata": {
+                    "operationMetadataId": "8dd3e8db-0406-4a4d-af42-d6fafbce14c9"
+                  },
+                  "type": "Terminate",
+                  "inputs": {
+                    "runStatus": "Cancelled"
+                  }
+                }
+              },
+              "runAfter": {},
+              "expression": {
+                "equals": [
+                  "@body('Check_if_its_a_weekday')",
+                  "1"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "212acb25-6513-4457-abcb-1dd451667998"
+              },
+              "type": "If"
+            }
+          },
+          "runAfter": {
+            "Check_if_its_a_weekday": [
+              "Succeeded"
+            ]
+          },
+          "expression": {
+            "equals": [
+              "@outputs('Check_if_its_a_weekday')['statusCode']",
+              200
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "3f2c73a4-6c72-488a-8922-d06d72409ee1"
+          },
+          "type": "If"
+        },
+        "List_rows_from_Bot_user_subscription": {
+          "runAfter": {
+            "Preferred_flow_run_time": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2f1a8dc5-1de1-452a-afa9-c8fc971b7d23"
+          },
+          "type": "OpenApiConnection",
+          "inputs": {
+            "host": {
+              "connectionName": "shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps"
+            },
+            "parameters": {
+              "entityName": "gg_bot_user_subscriptions",
+              "$select": "gg_bot_user_id,_gg_bot_user_id_value,gg_notification_type_id,_gg_notification_type_id_value,gg_name,gg_is_disabled,gg_notification_preferences",
+              "$filter": "gg_is_disabled eq false and gg_notification_type_id/gg_key eq 'dailyTimesheetNotification' and  gg_bot_user_id/gg_is_user_signed_out eq false and gg_bot_user_id/gg_systemuser_id/isdisabled eq false",
+              "$expand": "gg_bot_user_id($select=gg_chat_id,gg_systemuser_id,_gg_systemuser_id_value,gg_language_code),gg_notification_type_id($select=gg_telegrambot_id,_gg_telegrambot_id_value)"
+            },
+            "authentication": "@parameters('$authentication')"
+          },
+          "description": "notification eq Daily notification"
+        },
+        "Preferred_flow_run_time": {
+          "runAfter": {
+            "Work_hours": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "571e96ef-7ef4-4435-bf57-23c151fe0708"
+          },
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Preferred flowrun time",
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "Flow_start_time": {
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "26230686-aa48-4d08-816d-56d916b9103d"
+          },
+          "type": "Compose",
+          "inputs": "@formatDateTime(addHours(utcNow(),3),'HH:mm')\r\n"
+        }
+      }
+    },
+    "templateName": ""
+  },
+  "schemaVersion": "1.0.0.0"
+}

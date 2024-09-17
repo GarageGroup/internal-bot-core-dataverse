@@ -1,0 +1,1173 @@
+{
+  "properties": {
+    "connectionReferences": {
+      "shared_commondataserviceforapps": {
+        "api": {
+          "name": "shared_commondataserviceforapps"
+        },
+        "connection": {
+          "connectionReferenceLogicalName": "gg_sharedcommondataserviceforapps_2439c"
+        },
+        "runtimeSource": "embedded"
+      }
+    },
+    "definition": {
+      "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+      "contentVersion": "undefined",
+      "parameters": {
+        "$authentication": {
+          "defaultValue": {},
+          "type": "SecureObject"
+        },
+        "$connections": {
+          "defaultValue": {},
+          "type": "Object"
+        }
+      },
+      "triggers": {
+        "Recurrence": {
+          "type": "Recurrence",
+          "recurrence": {
+            "frequency": "Day",
+            "interval": 1,
+            "timeZone": "Russian Standard Time",
+            "startTime": "2024-04-28T08:00:00Z",
+            "schedule": {
+              "hours": [
+                "20",
+                "18",
+                "19",
+                "21"
+              ]
+            }
+          },
+          "metadata": {
+            "operationMetadataId": "04ce2264-5275-42c9-baf4-75876a77bb9e"
+          }
+        }
+      },
+      "actions": {
+        "Weekday": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Weekday",
+                "type": "integer",
+                "value": "@dayOfWeek(utcNow())"
+              }
+            ]
+          },
+          "runAfter": {
+            "Flow_start_time": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7d884299-0bd1-41f9-8d31-616f43b42d51"
+          }
+        },
+        "Switch": {
+          "type": "Switch",
+          "expression": "@variables('Weekday')",
+          "default": {
+            "actions": {}
+          },
+          "cases": {
+            "Saturday": {
+              "actions": {
+                "Set_Monday_2": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Monday",
+                    "value": "@{formatDateTime(addDays(utcNow(),-5),'yyyy-MM-dd')}"
+                  },
+                  "metadata": {
+                    "operationMetadataId": "ea5a8179-c29a-4359-b543-489e298f8021"
+                  }
+                },
+                "Set_Friday_2": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Friday",
+                    "value": "@{formatDateTime(addDays(utcNow(),-1),'yyyy-MM-dd')}"
+                  },
+                  "runAfter": {
+                    "Set_Monday_2": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "d12bafbf-835a-4992-b21f-bba30705a94b"
+                  }
+                }
+              },
+              "case": 6
+            },
+            "Sunday": {
+              "actions": {
+                "Set_Monday_3": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Monday",
+                    "value": "@{formatDateTime(addDays(utcNow(),-6),'yyyy-MM-dd')}"
+                  },
+                  "metadata": {
+                    "operationMetadataId": "304628fb-2163-4355-9f26-7feb6ececacc"
+                  }
+                },
+                "Set_Friday_3": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Friday",
+                    "value": "@{formatDateTime(addDays(utcNow(),-2),'yyyy-MM-dd')}"
+                  },
+                  "runAfter": {
+                    "Set_Monday_3": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "34a4fc25-e4c5-4e74-b9ad-4a527edb5bec"
+                  }
+                }
+              },
+              "case": 0
+            },
+            "Friday-1": {
+              "actions": {
+                "Set_Monday": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Monday",
+                    "value": "@{formatDateTime(addDays(utcNow(),-4),'yyyy-MM-dd')}"
+                  },
+                  "metadata": {
+                    "operationMetadataId": "5a646532-d395-428e-8fef-b0ff95220cb6"
+                  }
+                },
+                "Set_Friday": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Friday",
+                    "value": "@{formatDateTime(utcNow(),'yyyy-MM-dd')}"
+                  },
+                  "runAfter": {
+                    "Set_Monday": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "1adecead-d0e7-4dc5-8fcc-14e5a3d4ada5"
+                  }
+                }
+              },
+              "case": 5
+            }
+          },
+          "runAfter": {
+            "Preferred_flow_run_time": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6c6b2093-ce93-4073-9e93-1da2aaee1b12"
+          }
+        },
+        "Monday": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Monday",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Flow_works_on_Fri_Sat_Sun": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "7d884299-0bd1-41f9-8d31-616f43b42d51"
+          }
+        },
+        "Friday": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Friday",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Monday": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "e38bc2fc-2a65-4ec4-b581-f40e88f63618"
+          }
+        },
+        "Flow_works_on_Fri_Sat_Sun": {
+          "type": "If",
+          "expression": {
+            "or": [
+              {
+                "equals": [
+                  "@variables('Weekday')",
+                  5
+                ]
+              },
+              {
+                "equals": [
+                  "@variables('Weekday')",
+                  6
+                ]
+              },
+              {
+                "equals": [
+                  "@variables('Weekday')",
+                  0
+                ]
+              }
+            ]
+          },
+          "actions": {},
+          "else": {
+            "actions": {
+              "Terminate": {
+                "type": "Terminate",
+                "inputs": {
+                  "runStatus": "Cancelled"
+                },
+                "metadata": {
+                  "operationMetadataId": "8dd3e8db-0406-4a4d-af42-d6fafbce14c9"
+                }
+              }
+            }
+          },
+          "runAfter": {
+            "Weekday": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "957886be-6883-4174-9aab-69cddb53fbb9"
+          }
+        },
+        "Total_Work_hours": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Work hours",
+                "type": "float"
+              }
+            ]
+          },
+          "runAfter": {
+            "Friday": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99a73f32-0b3f-4184-9ca1-f4258e0b47de"
+          }
+        },
+        "List_rows_from_Bot_user_subscription": {
+          "type": "OpenApiConnection",
+          "description": "notification eq weekly timesheet notification",
+          "inputs": {
+            "parameters": {
+              "entityName": "gg_bot_user_subscriptions",
+              "$select": "gg_bot_user_id,_gg_bot_user_id_value,gg_notification_type_id,_gg_notification_type_id_value,gg_name,gg_is_disabled,gg_notification_preferences",
+              "$filter": "gg_is_disabled eq false and gg_notification_type_id/gg_key eq 'weeklyTimesheetNotification' and  gg_bot_user_id/gg_is_user_signed_out eq false and gg_bot_user_id/gg_systemuser_id/isdisabled eq false",
+              "$expand": "gg_bot_user_id($select=gg_chat_id,gg_systemuser_id,_gg_systemuser_id_value,gg_language_code),gg_notification_type_id($select=gg_telegrambot_id,_gg_telegrambot_id_value)"
+            },
+            "host": {
+              "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+              "operationId": "ListRecords",
+              "connectionName": "shared_commondataserviceforapps"
+            }
+          },
+          "runAfter": {
+            "Switch": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "2f1a8dc5-1de1-452a-afa9-c8fc971b7d23"
+          }
+        },
+        "Iterate_through_each_subscription": {
+          "type": "Foreach",
+          "foreach": "@outputs('List_rows_from_Bot_user_subscription')?['body/value']",
+          "actions": {
+            "Timesheet_entries_for_today_2": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "entityName": "gg_timesheetactivities",
+                  "$select": "ownerid, _ownerid_value, gg_date, gg_duration",
+                  "$filter": "_ownerid_value eq @{items('Iterate_through_each_subscription')?['gg_bot_user_id/_gg_systemuser_id_value']} and gg_date ge @{variables('Monday')} and gg_date le @{variables('Friday')}"
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "connectionName": "shared_commondataserviceforapps"
+                }
+              },
+              "runAfter": {
+                "Preferred_run_time_plus_second_minus_second": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "3c76de77-ef5c-4e78-97d4-9ccd915fbeb8"
+              }
+            },
+            "Parse_JSON_2": {
+              "type": "ParseJson",
+              "inputs": {
+                "content": "@json(items('Iterate_through_each_subscription')?['gg_notification_preferences'])",
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "Weekday": {
+                      "type": "string"
+                    },
+                    "flowRunTime": {
+                      "type": "string"
+                    },
+                    "workedHours": {
+                      "type": "string"
+                    }
+                  }
+                }
+              },
+              "runAfter": {
+                "Preferences_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "bbbfabe8-565f-42c3-a36c-64e1cf7ccbb5"
+              }
+            },
+            "Preferences_2": {
+              "type": "Compose",
+              "inputs": "@json(items('Iterate_through_each_subscription')?['gg_notification_preferences'])",
+              "runAfter": {
+                "tg_bot": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f6f18182-07f5-4b04-9d73-58f9e7653c28"
+              }
+            },
+            "Set_preferred_notification_days": {
+              "type": "SetVariable",
+              "description": "Set it to Friday if json is empty",
+              "inputs": {
+                "name": "Preferred notification days",
+                "value": "@if(empty(body('Parse_JSON_2')?['weekday']), '5', body('Parse_JSON_2')?['weekday'])"
+              },
+              "runAfter": {
+                "Parse_JSON_2": [
+                  "Succeeded",
+                  "Failed"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "77a5bc4d-db9c-4b27-8e9a-f45360bbaf35"
+              }
+            },
+            "Set_preferred_flow_run_time": {
+              "type": "SetVariable",
+              "description": "Set it to 19:00 if json is empty",
+              "inputs": {
+                "name": "Preferred flowrun time",
+                "value": "@{if(empty(body('Parse_JSON_2')?['flowRunTime']), '19:00', body('Parse_JSON_2')?['flowRunTime'])}"
+              },
+              "runAfter": {
+                "Set_preferred_notification_days": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "77a5bc4d-db9c-4b27-8e9a-f45360bbaf35"
+              }
+            },
+            "Filter_array_Monday": {
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('Timesheet_entries_for_today_2')?['body/value']",
+                "where": "@equals(item()?['gg_date'], variables('Monday'))"
+              },
+              "runAfter": {
+                "Timesheet_entries_for_today_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "18e6ac67-ac97-4bca-b7d8-c28e234cdd9b"
+              }
+            },
+            "Filter_array_Tuesday": {
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('Timesheet_entries_for_today_2')?['body/value']",
+                "where": "@equals(item()?['gg_date'], formatDateTime(addDays(variables('Monday'), 1), 'yyyy-MM-dd'))"
+              },
+              "runAfter": {
+                "Compose_Tuesday": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "426d1b52-d05d-4f4c-b999-2c15f4e46aa9"
+              }
+            },
+            "Compose_Tuesday": {
+              "type": "Compose",
+              "inputs": "@formatDateTime(addDays(variables('Monday'),1),'yyyy-MM-dd')",
+              "runAfter": {
+                "Timesheet_entries_for_today_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c5c9f080-94ea-4537-a67c-ab1ed894eedd"
+              }
+            },
+            "Monday_work_hours_calculation": {
+              "type": "Foreach",
+              "foreach": "@body('Filter_array_Monday')",
+              "actions": {
+                "Increment_Monday": {
+                  "type": "IncrementVariable",
+                  "inputs": {
+                    "name": "Monday work hours",
+                    "value": "@items('Monday_work_hours_calculation')?['gg_duration']"
+                  },
+                  "metadata": {
+                    "operationMetadataId": "f9df41c2-6a1c-4f41-ad0b-ca5dc31af15f"
+                  }
+                }
+              },
+              "runAfter": {
+                "Check_if_its_a_weekday_Monday": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 50
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "1fa91189-66ba-4117-b168-bb7c8cb2825d"
+              }
+            },
+            "Tuesday_work_hours_calculation": {
+              "type": "Foreach",
+              "foreach": "@body('Filter_array_Tuesday')",
+              "actions": {
+                "Increment_Tuesday": {
+                  "type": "IncrementVariable",
+                  "inputs": {
+                    "name": "Tuesday work hours",
+                    "value": "@items('Tuesday_work_hours_calculation')?['gg_duration']"
+                  },
+                  "metadata": {
+                    "operationMetadataId": "f370a398-7098-487f-85ba-935f335b6c34"
+                  }
+                }
+              },
+              "runAfter": {
+                "Check_if_its_a_weekday_Tuesday": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 50
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "211b0709-4b28-4c9c-9a0d-a981de95020e"
+              }
+            },
+            "Recalculation": {
+              "type": "Scope",
+              "actions": {
+                "Recalc_work_hours": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Work hours",
+                    "value": 0
+                  },
+                  "metadata": {
+                    "operationMetadataId": "01072215-2695-4809-ab09-2103ab60445a"
+                  }
+                },
+                "Recalc_monday_hours": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Monday work hours",
+                    "value": 0
+                  },
+                  "runAfter": {
+                    "Recalc_work_hours": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "5cd03e80-f24c-4b75-ba04-e5bbb0692506"
+                  }
+                },
+                "Recalc_tuesday_hours": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Tuesday work hours",
+                    "value": 0
+                  },
+                  "runAfter": {
+                    "Recalc_monday_hours": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "360476fc-7bb0-484f-8472-22740dedf1ba"
+                  }
+                },
+                "Recalc_wednesday_hours": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Wednesday work hours",
+                    "value": 0
+                  },
+                  "runAfter": {
+                    "Recalc_tuesday_hours": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "503dd57d-e36e-4959-ba1a-4650b7e0a54a"
+                  }
+                },
+                "Recalc_thursday_hours": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Thursday work hours",
+                    "value": 0
+                  },
+                  "runAfter": {
+                    "Recalc_wednesday_hours": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "a92c6f48-240f-43d9-8297-827929d4f496"
+                  }
+                },
+                "Recalc_friday_hours": {
+                  "type": "SetVariable",
+                  "inputs": {
+                    "name": "Friday work hours",
+                    "value": 0
+                  },
+                  "runAfter": {
+                    "Recalc_thursday_hours": [
+                      "Succeeded"
+                    ]
+                  },
+                  "metadata": {
+                    "operationMetadataId": "76565b73-046d-48db-9f20-7d889e82a79c"
+                  }
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "aeeb5c3f-ad40-429c-852e-b2a7a78668e5"
+              }
+            },
+            "Compose_Wednesday": {
+              "type": "Compose",
+              "inputs": "@formatDateTime(addDays(variables('Monday'), 2), 'yyyy-MM-dd')",
+              "runAfter": {
+                "Timesheet_entries_for_today_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "c5c9f080-94ea-4537-a67c-ab1ed894eedd"
+              }
+            },
+            "Filter_array_Wednesday": {
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('Timesheet_entries_for_today_2')?['body/value']",
+                "where": "@equals(item()?['gg_date'], formatDateTime(addDays(variables('Monday'), 2), 'yyyy-MM-dd'))"
+              },
+              "runAfter": {
+                "Compose_Wednesday": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "426d1b52-d05d-4f4c-b999-2c15f4e46aa9"
+              }
+            },
+            "Wednesday_work_hours_calculation": {
+              "type": "Foreach",
+              "foreach": "@body('Filter_array_Wednesday')",
+              "actions": {
+                "Increment_Wednesday": {
+                  "type": "IncrementVariable",
+                  "inputs": {
+                    "name": "Wednesday work hours",
+                    "value": "@items('Wednesday_work_hours_calculation')?['gg_duration']"
+                  },
+                  "metadata": {
+                    "operationMetadataId": "42c38399-de52-4378-b785-e028da56fd17"
+                  }
+                }
+              },
+              "runAfter": {
+                "Check_if_its_a_weekday_Wednesday": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 50
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "2f1be8a3-06b1-43b6-8a72-85617571b69f"
+              }
+            },
+            "Compose_Thursday": {
+              "type": "Compose",
+              "inputs": "@formatDateTime(addDays(variables('Monday'), 3), 'yyyy-MM-dd')",
+              "runAfter": {
+                "Timesheet_entries_for_today_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "01491164-5520-459e-a153-2b77c49166b2"
+              }
+            },
+            "Filter_array_Thursday": {
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('Timesheet_entries_for_today_2')?['body/value']",
+                "where": "@equals(item()?['gg_date'], formatDateTime(addDays(variables('Monday'), 3), 'yyyy-MM-dd'))"
+              },
+              "runAfter": {
+                "Compose_Thursday": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "5ab105f0-743e-4b69-992d-cc82d62a254e"
+              }
+            },
+            "Thursday_work_hours_calculation": {
+              "type": "Foreach",
+              "foreach": "@body('Filter_array_Thursday')",
+              "actions": {
+                "Increment_Thursday": {
+                  "type": "IncrementVariable",
+                  "inputs": {
+                    "name": "Thursday work hours",
+                    "value": "@items('Thursday_work_hours_calculation')?['gg_duration']"
+                  },
+                  "metadata": {
+                    "operationMetadataId": "c5614851-a4ff-48e0-a7c2-3fc03dd530ce"
+                  }
+                }
+              },
+              "runAfter": {
+                "Check_if_its_a_weekday_5_Thursday": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 50
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "f66ca703-a3c8-41bd-ae28-c064d838e19b"
+              }
+            },
+            "Filter_array_Friday": {
+              "type": "Query",
+              "inputs": {
+                "from": "@outputs('Timesheet_entries_for_today_2')?['body/value']",
+                "where": "@equals(item()?['gg_date'], variables('Friday'))"
+              },
+              "runAfter": {
+                "Timesheet_entries_for_today_2": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f7f78ebc-27f0-4aae-9fd0-5cd49a6c996f"
+              }
+            },
+            "Friday_work_hours_calculation": {
+              "type": "Foreach",
+              "foreach": "@body('Filter_array_Friday')",
+              "actions": {
+                "Increment_Friday": {
+                  "type": "IncrementVariable",
+                  "inputs": {
+                    "name": "Friday work hours",
+                    "value": "@items('Friday_work_hours_calculation')?['gg_duration']"
+                  },
+                  "metadata": {
+                    "operationMetadataId": "72813a20-ad49-4a19-b30b-80e599412b2f"
+                  }
+                }
+              },
+              "runAfter": {
+                "Check_if_its_a_weekday_Friday": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 50
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "913ac0a7-a259-4d16-9233-8abbf06e31cf"
+              }
+            },
+            "Check_how_many_hours_signed_off_for_this_week": {
+              "type": "If",
+              "expression": {
+                "and": [
+                  {
+                    "less": [
+                      "@variables('Work hours')",
+                      "@if(empty(body('Parse_JSON_2')?['workedHours']), 40, float(body('Parse_JSON_2')?['workedHours']))"
+                    ]
+                  },
+                  {
+                    "contains": [
+                      "@variables('Preferred notification days')",
+                      "@outputs('Weekday_to_string')"
+                    ]
+                  },
+                  {
+                    "contains": [
+                      "@outputs('Preferred_run_time_plus_second_minus_second')",
+                      "@outputs('Flow_start_time')"
+                    ]
+                  }
+                ]
+              },
+              "actions": {
+                "Language": {
+                  "type": "If",
+                  "expression": {
+                    "equals": [
+                      "@items('Iterate_through_each_subscription')?['gg_bot_user_id/gg_language_code']",
+                      "@string('en')"
+                    ]
+                  },
+                  "actions": {
+                    "HTTP": {
+                      "type": "Http",
+                      "inputs": {
+                        "uri": "@{first(outputs('tg_bot')?['body/value'])?['gg_bot_message_url']}",
+                        "method": "POST",
+                        "body": {
+                          "chat_id": "@{outputs('chat_id')}",
+                          "text": "Hello! You have logged <b>@{variables('Work hours')} hours</b> this week. Don't forget to log the rest!\n\rMonday: <b>@{if(bool(int(body('Check_if_its_a_weekday_Monday'))), 'Public holiday!', concat(variables('Monday work hours'), ' hours'))}</b>\n\rTuesday: <b>@{if(bool(int(body('Check_if_its_a_weekday_Tuesday'))), 'Public holiday!', concat(variables('Tuesday work hours'), ' hours'))}</b>\n\rWednesday: <b>@{if(bool(int(body('Check_if_its_a_weekday_Wednesday'))), 'Public holiday!', concat(variables('Wednesday work hours'), ' hours'))}</b>\n\rThursday: <b>@{if(bool(int(body('Check_if_its_a_weekday_5_Thursday'))), 'Public holiday!', concat(variables('Thursday work hours'), ' hours'))}</b>\n\rFriday: <b>@{if(bool(int(body('Check_if_its_a_weekday_Friday'))), 'Public holiday!', concat(variables('Friday work hours'), ' hours'))}</b>\n\r--------------------------------------------------\n\r/newtimesheet - Create timesheet",
+                          "parse_mode": "HTML"
+                        }
+                      },
+                      "metadata": {
+                        "operationMetadataId": "57e09107-6b53-4b12-a7ba-6722f24d2659"
+                      }
+                    }
+                  },
+                  "else": {
+                    "actions": {
+                      "HTTP_2": {
+                        "type": "Http",
+                        "inputs": {
+                          "uri": "@{first(outputs('tg_bot')?['body/value'])?['gg_bot_message_url']}",
+                          "method": "POST",
+                          "body": {
+                            "chat_id": "@{outputs('chat_id')}",
+                            "text": "Привет! За эту неделю списано <b>@{variables('Work hours')} ч</b>. Не забудь списать остальное!\n\rПонедельник: <b>@{if(bool(int(body('Check_if_its_a_weekday_Monday'))),'Выходной!',concat(variables('Monday work hours'),' ч'))}</b>\n\rВторник: <b>@{if(bool(int(body('Check_if_its_a_weekday_Tuesday'))),'Выходной!',concat(variables('Tuesday work hours'),' ч'))}</b>\n\rСреда: <b>@{if(bool(int(body('Check_if_its_a_weekday_Wednesday'))),'Выходной!',concat(variables('Wednesday work hours'),' ч'))}</b>\n\rЧетверг: <b>@{if(bool(int(body('Check_if_its_a_weekday_5_Thursday'))),'Выходной!',concat(variables('Thursday work hours'),' ч'))}</b>\n\rПятница: <b>@{if(bool(int(body('Check_if_its_a_weekday_Friday'))),'Выходной!',concat(variables('Friday work hours'),' ч'))}</b>\n\r--------------------------------------------------\n\r/newtimesheet - Списать время",
+                            "parse_mode": "HTML"
+                          }
+                        },
+                        "metadata": {
+                          "operationMetadataId": "57e09107-6b53-4b12-a7ba-6722f24d2659"
+                        }
+                      }
+                    }
+                  },
+                  "metadata": {
+                    "operationMetadataId": "3105589c-b837-4d28-915d-96b2e89f47cc"
+                  }
+                }
+              },
+              "else": {
+                "actions": {}
+              },
+              "runAfter": {
+                "Weekday_to_string": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "e7709600-053d-4249-b943-7cb7b8841bbf"
+              }
+            },
+            "Weekday_to_string": {
+              "type": "Compose",
+              "inputs": "@string(variables('Weekday'))",
+              "runAfter": {
+                "Calc_total_work_hours": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "ffd00252-9dda-4b3f-9fb7-61d8b15e90a5"
+              }
+            },
+            "Calc_total_work_hours": {
+              "type": "Foreach",
+              "foreach": "@outputs('Timesheet_entries_for_today_2')?['body/value']",
+              "actions": {
+                "Increment_variable_2": {
+                  "type": "IncrementVariable",
+                  "inputs": {
+                    "name": "Work hours",
+                    "value": "@items('Calc_total_work_hours')?['gg_duration']"
+                  },
+                  "metadata": {
+                    "operationMetadataId": "2f75f9b9-269a-45fd-8cb7-b0a94c935e3c"
+                  }
+                }
+              },
+              "runAfter": {
+                "Friday_work_hours_calculation": [
+                  "Succeeded"
+                ],
+                "Wednesday_work_hours_calculation": [
+                  "Succeeded"
+                ],
+                "Thursday_work_hours_calculation": [
+                  "Succeeded"
+                ],
+                "Monday_work_hours_calculation": [
+                  "Succeeded"
+                ],
+                "Tuesday_work_hours_calculation": [
+                  "Succeeded"
+                ]
+              },
+              "runtimeConfiguration": {
+                "concurrency": {
+                  "repetitions": 50
+                }
+              },
+              "metadata": {
+                "operationMetadataId": "e854bc5d-98db-4fc8-96dd-5bdec2fce31f"
+              }
+            },
+            "Check_if_its_a_weekday_Monday": {
+              "type": "Http",
+              "inputs": {
+                "uri": "https://isdayoff.ru/@{variables('Monday')}",
+                "method": "GET"
+              },
+              "runAfter": {
+                "Filter_array_Monday": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b6e3f6b8-df06-4cf0-94cb-7132b3de7c13"
+              }
+            },
+            "Check_if_its_a_weekday_Friday": {
+              "type": "Http",
+              "inputs": {
+                "uri": "https://isdayoff.ru/@{variables('Friday')}",
+                "method": "GET"
+              },
+              "runAfter": {
+                "Filter_array_Friday": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b6e3f6b8-df06-4cf0-94cb-7132b3de7c13"
+              }
+            },
+            "Check_if_its_a_weekday_Tuesday": {
+              "type": "Http",
+              "inputs": {
+                "uri": "https://isdayoff.ru/@{formatDateTime(addDays(variables('Monday'),1),'yyyy-MM-dd')}",
+                "method": "GET"
+              },
+              "runAfter": {
+                "Filter_array_Tuesday": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b6e3f6b8-df06-4cf0-94cb-7132b3de7c13"
+              }
+            },
+            "Check_if_its_a_weekday_Wednesday": {
+              "type": "Http",
+              "inputs": {
+                "uri": "https://isdayoff.ru/@{formatDateTime(addDays(variables('Monday'), 2), 'yyyy-MM-dd')}",
+                "method": "GET"
+              },
+              "runAfter": {
+                "Filter_array_Wednesday": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b6e3f6b8-df06-4cf0-94cb-7132b3de7c13"
+              }
+            },
+            "Check_if_its_a_weekday_5_Thursday": {
+              "type": "Http",
+              "inputs": {
+                "uri": "https://isdayoff.ru/@{formatDateTime(addDays(variables('Monday'), 3), 'yyyy-MM-dd')}",
+                "method": "GET"
+              },
+              "runAfter": {
+                "Filter_array_Thursday": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "b6e3f6b8-df06-4cf0-94cb-7132b3de7c13"
+              }
+            },
+            "chat_id": {
+              "type": "Compose",
+              "inputs": "@items('Iterate_through_each_subscription')?['gg_bot_user_id/gg_chat_id']",
+              "runAfter": {
+                "Recalculation": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "f09d45de-f869-4a2d-a996-4529171324ee"
+              }
+            },
+            "tg_bot": {
+              "type": "OpenApiConnection",
+              "inputs": {
+                "parameters": {
+                  "entityName": "gg_telegram_bots",
+                  "$select": "gg_telegram_botid,gg_bot_message_url",
+                  "$filter": "gg_telegram_botid eq @{items('Iterate_through_each_subscription')?['gg_notification_type_id/_gg_telegrambot_id_value']}",
+                  "$top": 1
+                },
+                "host": {
+                  "apiId": "/providers/Microsoft.PowerApps/apis/shared_commondataserviceforapps",
+                  "operationId": "ListRecords",
+                  "connectionName": "shared_commondataserviceforapps"
+                }
+              },
+              "runAfter": {
+                "chat_id": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "1c59ea47-19b1-44a0-88d6-dd06a50abad0"
+              }
+            },
+            "Preferred_run_time_plus_second_minus_second": {
+              "type": "Compose",
+              "inputs": "@concat(formatDateTime(addMinutes(variables('Preferred flowrun time'), -1), 'HH:mm'), ';', formatDateTime(addMinutes(variables('Preferred flowrun time'), 1), 'HH:mm'), ';', variables('Preferred flowrun time'))",
+              "runAfter": {
+                "Set_preferred_flow_run_time": [
+                  "Succeeded"
+                ]
+              },
+              "metadata": {
+                "operationMetadataId": "aa096a0f-59fe-4db4-a3d4-06f112492cd0"
+              }
+            }
+          },
+          "runAfter": {
+            "List_rows_from_Bot_user_subscription": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "6b5851bf-aaa7-430a-9ea4-183de79c28d7"
+          }
+        },
+        "Preferred_notification_days": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Preferred notification days",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Friday_work_hours": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "571e96ef-7ef4-4435-bf57-23c151fe0708"
+          }
+        },
+        "Flow_start_time": {
+          "type": "Compose",
+          "inputs": "@formatDateTime(addHours(utcNow(), 3), 'HH:mm')",
+          "runAfter": {},
+          "metadata": {
+            "operationMetadataId": "26230686-aa48-4d08-816d-56d916b9103d"
+          }
+        },
+        "Preferred_flow_run_time": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Preferred flowrun time",
+                "type": "string"
+              }
+            ]
+          },
+          "runAfter": {
+            "Preferred_notification_days": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "571e96ef-7ef4-4435-bf57-23c151fe0708"
+          }
+        },
+        "Monday_work_hours": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Monday work hours",
+                "type": "float"
+              }
+            ]
+          },
+          "runAfter": {
+            "Total_Work_hours": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99a73f32-0b3f-4184-9ca1-f4258e0b47de"
+          }
+        },
+        "Tuesday_work_hours": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Tuesday work hours",
+                "type": "float"
+              }
+            ]
+          },
+          "runAfter": {
+            "Monday_work_hours": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99a73f32-0b3f-4184-9ca1-f4258e0b47de"
+          }
+        },
+        "Wednesday_work_hours": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Wednesday work hours",
+                "type": "float"
+              }
+            ]
+          },
+          "runAfter": {
+            "Tuesday_work_hours": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99a73f32-0b3f-4184-9ca1-f4258e0b47de"
+          }
+        },
+        "Thursday_work_hours": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Thursday work hours",
+                "type": "float"
+              }
+            ]
+          },
+          "runAfter": {
+            "Wednesday_work_hours": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99a73f32-0b3f-4184-9ca1-f4258e0b47de"
+          }
+        },
+        "Friday_work_hours": {
+          "type": "InitializeVariable",
+          "inputs": {
+            "variables": [
+              {
+                "name": "Friday work hours",
+                "type": "float"
+              }
+            ]
+          },
+          "runAfter": {
+            "Thursday_work_hours": [
+              "Succeeded"
+            ]
+          },
+          "metadata": {
+            "operationMetadataId": "99a73f32-0b3f-4184-9ca1-f4258e0b47de"
+          }
+        }
+      }
+    },
+    "templateName": null
+  },
+  "schemaVersion": "1.0.0.0"
+}
